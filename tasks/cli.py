@@ -1,5 +1,5 @@
 from .export import save_to_file
-from .storage import add_task, get_all_tasks, mark_task_completed, remove_task
+from .storage import add_task, get_all_tasks, get_tasks_print, mark_task_completed, remove_task
 
 
 def handle_action():
@@ -9,6 +9,7 @@ def handle_action():
         "2 - remove task\n"
         "3 - mark as done\n"
         "4 - show all tasks\n"
+        ">>> "
     )
 
     match user_input:
@@ -16,21 +17,23 @@ def handle_action():
             title = input("Enter title: ")
             add_task(title)
         case "2":
-            print(get_all_tasks())
-            index = int(input("Choose task index to remove: "))
-            remove_task(index)
+            print(get_tasks_print())
+            task_num = int(input("Choose task index to remove: "))
+            remove_task(task_num - 1)
         case "3":
-            print(get_all_tasks())
-            index = int(input("Choose task index to mark as done: "))
-            mark_task_completed(index, True)
+            print(get_tasks_print())
+            task_num = int(input("Choose task index to mark as done: "))
+            mark_task_completed(task_num - 1, True)
         case "4":
-            print(get_all_tasks())
+            print(get_tasks_print())
         case _:
             print("Try again")
 
 
 def handle_interrupt():
-    user_input = input("\nDo you want to export tasks (y/n)?")
+    user_input = input("\nDo you want to exit (y/n)?")
     if user_input == "y":
-        save_to_file(get_all_tasks(), "export")
+        user_input = input("Do you want to export tasks (y/n)?")
+        if user_input == "y":
+            save_to_file(get_all_tasks(), "export")
         return True
